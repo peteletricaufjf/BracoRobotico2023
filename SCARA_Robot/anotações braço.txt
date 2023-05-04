@@ -1,0 +1,114 @@
+Como estava 
+
+data[0] - Botão de salvar 
+data[1] - Run
+data[2] - Angulo j1
+data[3] - Angulo j2
+data[4] - Angulo j3
+data[5] - Eixo Z (posição)
+data[6] - Garra
+data[7] - velocidade
+data[8] - Aceleração
+
+
+Como eu quero
+
+data[0] - Angulo j1
+data[1] - Angulo j2
+data[2] - Eixo Z (posição)
+data[3] - Velocidade
+data[4] - Aceleração
+data[5] - Eletroimã
+
+
+// If RUN button is pressed
+  while (data[1] == 1) {
+    stepper1.setSpeed(data[7]);
+    stepper2.setSpeed(data[7]);
+    stepper3.setSpeed(data[7]);
+    stepper4.setSpeed(data[7]);
+    stepper1.setAcceleration(data[8]);
+    stepper2.setAcceleration(data[8]);
+    stepper3.setAcceleration(data[8]);
+    stepper4.setAcceleration(data[8]);
+
+    // execute the stored steps
+    for (int i = 0; i <= positionsCounter - 1; i++) {
+      if (data[1] == 0) {
+        break;
+      }
+      stepper1.moveTo(theta1Array[i]);
+      stepper2.moveTo(theta2Array[i]);
+      stepper3.moveTo(phiArray[i]);
+      stepper4.moveTo(zArray[i]);
+      while (stepper1.currentPosition() != theta1Array[i] || stepper2.currentPosition() != theta2Array[i] || stepper3.currentPosition() != phiArray[i] || stepper4.currentPosition() != zArray[i]) {
+        stepper1.run();
+        stepper2.run();
+        stepper3.run();
+        stepper4.run();
+      }
+      if (i == 0) {
+        gripperServo.write(gripperArray[i]);
+      }
+      else if (gripperArray[i] != gripperArray[i - 1]) {
+        gripperServo.write(gripperArray[i]);
+        delay(800); // wait 0.8s for the servo to grab or drop - the servo is slow
+      }
+
+      //check for change in speed and acceleration or program stop
+      if (Serial.available()) {
+        content = Serial.readString(); // Read the incomding data from Processing
+        // Extract the data from the string and put into separate integer variables (data[] array)
+        for (int i = 0; i < 10; i++) {
+          int index = content.indexOf(","); // locate the first ","
+          data[i] = atol(content.substring(0, index).c_str()); //Extract the number from start to the ","
+          content = content.substring(index + 1); //Remove the number from the string
+        }
+
+        if (data[1] == 0) {
+          break;
+        }
+        // change speed and acceleration while running the program
+        stepper1.setSpeed(data[7]);
+        stepper2.setSpeed(data[7]);
+        stepper3.setSpeed(data[7]);
+        stepper4.setSpeed(data[7]);
+        stepper1.setAcceleration(data[8]);
+        stepper2.setAcceleration(data[8]);
+        stepper3.setAcceleration(data[8]);
+        stepper4.setAcceleration(data[8]);
+      }
+    }
+    /*
+      // execute the stored steps in reverse
+      for (int i = positionsCounter - 2; i >= 0; i--) {
+      if (data[1] == 0) {
+        break;
+      }
+      stepper1.moveTo(theta1Array[i]);
+      stepper2.moveTo(theta2Array[i]);
+      stepper3.moveTo(phiArray[i]);
+      stepper4.moveTo(zArray[i]);
+      while (stepper1.currentPosition() != theta1Array[i] || stepper2.currentPosition() != theta2Array[i] || stepper3.currentPosition() != phiArray[i] || stepper4.currentPosition() != zArray[i]) {
+        stepper1.run();
+        stepper2.run();
+        stepper3.run();
+        stepper4.run();
+      }
+      gripperServo.write(gripperArray[i]);
+
+      if (Serial.available()) {
+        content = Serial.readString(); // Read the incomding data from Processing
+        // Extract the data from the string and put into separate integer variables (data[] array)
+        for (int i = 0; i < 10; i++) {
+          int index = content.indexOf(","); // locate the first ","
+          data[i] = atol(content.substring(0, index).c_str()); //Extract the number from start to the ","
+          content = content.substring(index + 1); //Remove the number from the string
+        }
+        if (data[1] == 0) {
+          break;
+        }
+      }
+      }
+    */
+  }
