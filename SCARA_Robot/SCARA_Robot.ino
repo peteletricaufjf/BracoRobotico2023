@@ -72,7 +72,7 @@ void loop() {
       int index = content.indexOf(","); // locate the first ","
       data[i] = content.substring(0, index).toInt(); //Extract the number from start to the ","
       content = content.substring(index + 1); //Remove the number from the string
-      Serial.println(data[i]);
+      //Serial.println(data[i]);
 
     }
   /*
@@ -110,18 +110,20 @@ void loop() {
 
   if (data[5] == 1) {
     digitalWrite(eletroima, HIGH);
+    Serial.println(1);
   }
     else {
       digitalWrite(eletroima, LOW);
+      Serial.println(1);
     }
   }
-
-  Serial.println("deu");
+  
 }
 
 void homing() {
   // Homing Stepper4
 
+  
   Serial.println("motor4");
   while (digitalRead(limitSwitch4) != 1) {
     stepper4.setSpeed(-650);
@@ -165,6 +167,6 @@ void homing() {
 
 void serialFlush() {
   while (Serial.available() > 0) {  //while there are characters in the serial buffer, because Serial.available is >0
-    Serial.read();         // get one character
+    //Serial.read();         // get one character
   }
 }
