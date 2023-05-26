@@ -1,0 +1,4 @@
+{
+    "board": "arduino:avr:uno",
+    "sketch": "Tabuleiro_Arduino/codigo_intermediario_funcoesleituraecompara/codigo_intermediario_funcoesleituraecompara.ino"
+}
