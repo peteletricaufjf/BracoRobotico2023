@@ -21,21 +21,24 @@ tabuleiro = pd.DataFrame(index = index, columns = col)
 
 # Preenche a matriz com as coordenadas de cada casa
 
-tabuleiro["a"] = [[30,50],[20,30],[0,0],[0,0],[0,0],[0,0],[0,0],[50,0]]
-tabuleiro["b"] = [[0,0],[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
-tabuleiro["c"] = [[0,0],[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
-tabuleiro["d"] = [[0,0],[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
-tabuleiro["e"] = [[0,0],[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
-tabuleiro["f"] = [[0,0],[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
-tabuleiro["g"] = [[0,0],[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
-tabuleiro["h"] = [[0,0],[0,1],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
+tabuleiro["a"] = [[64,60],[55,81],[48,98],[42,112],[36,124],[30,135],[23,145],[17,154]]
+tabuleiro["b"] = [[65,67],[58,88],[52,102],[46,118],[42,130],[36,142],[31,153],[29,165]]
+tabuleiro["c"] = [[69,72],[62,92],[56,107],[52,121],[48,135],[45,147],[42,159],[42,172]]
+tabuleiro["d"] = [[73,75],[68,94],[62,110],[58,124],[55,137],[55,150],[54,163],[60,178]]
+tabuleiro["e"] = [[78,77],[72,95],[68,110],[65,125],[64,138],[63,150],[66,164],[76,180]]
+tabuleiro["f"] = [[84,75],[80,93],[75,109],[73,123],[73,137],[73,149],[77,161],[86,176]]
+tabuleiro["g"] = [[90,74],[86,90],[83,106],[81,120],[81,133],[83,146],[88,157],[96,170]]
+tabuleiro["h"] = [[97,67],[92,87],[90,102],[88,116],[89,128],[92,140],[96,151],[105,162]]
 
 
 # Abre uma conexão serial com o Arduino
 serTabuleiro = serial.Serial('COM8',115200,timeout= None)
 
 # Recebe uma string do Arduino referente a jogada
-jogada_usuario = serTabuleiro.readline().decode('utf-8').rstrip()
+jogada_usuario = serTabuleiro.readline()
+
+# Fatiou passou
+jogada_usuario[2:6]
 
 # Fecha a conexão serial
 serTabuleiro.close()
@@ -76,15 +79,11 @@ l1 = float(jogadabraco[1])
 c2 = jogadabraco[2]
 l2 = float(jogadabraco[3])
 
-x1 = tabuleiro.loc[l1, c1][0]
-y1 = tabuleiro.loc[l1, c1][1]
+theta1 = tabuleiro.loc[l1, c1][0]
+phi1 = tabuleiro.loc[l1, c1][1]
 
-x2 = tabuleiro.loc[l2, c2][0]
-y2 = tabuleiro.loc[l2, c2][1]
-
-# theta1_j1 -> angulo 1 da primeira jogada(j1)
-jogada1 = funcB.inverseKinematics(x1,y1) #acessamos theta1_j1 por jogada1[0], etc
-jogada2 = funcB.inverseKinematics(x2,y2) #acessamos theta1_j2 por jogada2[0], etc
+theta2 = tabuleiro.loc[l2, c2][0]
+phi2 = tabuleiro.loc[l2, c2][1]
 
 
 # timeout é o tempo que o python irá esperar para receber o dado do arduino, nesse caso coloquei o tempo como indefinido
