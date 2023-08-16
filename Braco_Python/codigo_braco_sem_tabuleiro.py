@@ -101,9 +101,12 @@ while True:
         funcB.seComeu(pacman,theta2,phi2)
         funcB.movimentaPeca(theta1,phi1,theta2,phi2)
 
+        if board.is_check():
+            print("VOCÊ ESTÁ EM CHEQUE! ")
+
         if board.is_checkmate():
-            print("CHECKMATE DO BRAÇO!! O JOGO ACABOU.")
+            print("CHECKMATE DO BRAÇO!! O JOGO ACABOU. ")
             break
     else:
-        print("CHECKMATE DO PLAYER!! O JOGO ACABOU.")
+        print("CHECKMATE DO PLAYER!! O JOGO ACABOU. ")
         break
