@@ -20,7 +20,7 @@ int address_mux4[8][2] = {{8, 12},
                           {10, 14},
                           {5, 1},
                           {11, 15},
-                          {4, 0}}
+                          {4, 0}};
 
 int address_mux3[8][2] = {{0, 4},
                           {15, 11},
@@ -29,7 +29,7 @@ int address_mux3[8][2] = {{0, 4},
                           {2, 6},
                           {13, 9},
                           {3, 7},
-                          {12, 8}}
+                          {12, 8}};
 
 int address_mux2[8][2] = {{8, 12},
                           {7, 3},
@@ -38,7 +38,7 @@ int address_mux2[8][2] = {{8, 12},
                           {10, 14},
                           {5, 1},
                           {11, 15},
-                          {4, 0}}
+                          {4, 0}};
 
 int address_mux1[8][2] = {{0, 4},
                           {15, 11},
@@ -47,7 +47,13 @@ int address_mux1[8][2] = {{0, 4},
                           {2, 6},
                           {13, 9},
                           {3, 7},
-                          {12, 8}}
+                          {12, 8}};
+
+int leitura_atual[7][7];
+int leitura_memoria[7][7];
+int moveu_coluna[1];
+int moveu_linha[1];
+int mov[3];
 
 int enable1 = ENABLE1;
 int enable2 = ENABLE2;
@@ -73,7 +79,7 @@ void lertabuleiro_aposrobo()
   digitalWrite(enable1, LOW);
   digitalWrite(enable2, HIGH);
   digitalWrite(enable3, HIGH);
-  digiralWrite(enable4, HIGH);
+  digitalWrite(enable4, HIGH);
   for (int i = 0; i < mux1.channelCount(); i++)
   {
     leitura_atual[linha][coluna] = mux1.read(address_mux1[linha][coluna]);
@@ -158,7 +164,7 @@ void lertabuleiro_humano()
   digitalWrite(enable1, LOW);
   digitalWrite(enable2, HIGH);
   digitalWrite(enable3, HIGH);
-  digiralWrite(enable4, HIGH);
+  digitalWrite(enable4, HIGH);
   for (int i = 0; i < mux1.channelCount(); i++)
   {
     leitura_atual[linha][coluna] = mux1.read(address_mux1[linha][coluna]);
@@ -262,7 +268,7 @@ void qualmovimento()
   // "mov[0]mov[1]mov[2]mov[3]"
 }
 
-LiquidCrystal_I2C lcd(03XF, 16, 2);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 void lcdIniciaGame()
 {

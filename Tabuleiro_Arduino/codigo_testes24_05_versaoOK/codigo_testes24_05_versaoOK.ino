@@ -1,15 +1,17 @@
 #include <Arduino.h>
 #include <Mux.h>
 
-#define SIG 3
+#define SIG 4
 #define S0 A0
 #define S1 A1
 #define S2 A2
 #define S3 A3
-#define ENABLE3 6
-#define ENABLE4 7
 #define ENABLE1 8
 #define ENABLE2 9
+#define ENABLE3 10
+#define ENABLE4 11
+#define a1 6
+
 using namespace admux;
 
 
@@ -62,11 +64,10 @@ byte tabuleiro_memoria[8][8];
 byte tabuleiro_depois[8][8];
 byte tabuleiro_captura[8][8];
 
-Mux mux1(Pin(SIG, INPUT_PULLUP, PinType::Digital), Pinset(S0, S1, S2, S3));
-Mux mux2(Pin(SIG, INPUT_PULLUP, PinType::Digital), Pinset(S0, S1, S2, S3));
-Mux mux3(Pin(SIG, INPUT_PULLUP, PinType::Digital), Pinset(S0, S1, S2, S3));
-Mux mux4(Pin(SIG, INPUT_PULLUP, PinType::Digital), Pinset(S0, S1, S2, S3));
-
+Mux mux1(Pin(SIG, INPUT, PinType::Digital), Pinset(S0, S1, S2, S3));
+Mux mux2(Pin(SIG, INPUT, PinType::Digital), Pinset(S0, S1, S2, S3));
+Mux mux3(Pin(SIG, INPUT, PinType::Digital), Pinset(S0, S1, S2, S3));
+Mux mux4(Pin(SIG, INPUT, PinType::Digital), Pinset(S0, S1, S2, S3));
 
 void lertabuleiro_humano()
 {
@@ -84,7 +85,7 @@ void lertabuleiro_humano()
   for (int i = 0; i < 16; i++)
   {
     leitura_atual[linha][coluna] = mux4.read(address_mux4[linhale][colunale]);
-
+    delay(10);
     if (linha == 7)
     {
       linha = 0;
@@ -107,6 +108,7 @@ void lertabuleiro_humano()
   for (int i = 0; i < 16 ; i++)
   {
     leitura_atual[linha][coluna] = mux3.read(address_mux3[linhale][colunale]);
+    delay(10);
     // Serial.print("Push button at channel "); Serial.print(i); Serial.print(" is "); Serial.println(data == LOW ? "pressed" : "not pressed");
     if (linha == 7)
     {
@@ -129,6 +131,7 @@ void lertabuleiro_humano()
   for (int i = 0; i < 16; i++)
   {
     leitura_atual[linha][coluna] = mux2.read(address_mux2[linhale][colunale]);
+    delay(10);
     // Serial.print("Push button at channel "); Serial.print(i); Serial.print(" is "); Serial.println(data == LOW ? "pressed" : "not pressed");
     if (linha == 7)
     {
@@ -151,6 +154,7 @@ void lertabuleiro_humano()
   for (int i = 0; i < 16; i++)
   {
     leitura_atual[linha][coluna] = mux1.read(address_mux1[linhale][colunale]);
+    delay(10);
     // Serial.print("Push button at channel "); Serial.print(i); Serial.print(" is "); Serial.println(data == LOW ? "pressed" : "not pressed");
     if (linha == 7)
     {
@@ -165,6 +169,7 @@ void lertabuleiro_humano()
       linhale++;
     }
   }
+  leitura_atual[7][7] = digitalRead(a1);
   for (int i = 0; i < 8; i++)
   {
     for (int j = 0; j < 8; j++)
@@ -192,7 +197,7 @@ void setup() {
   pinMode(enable2, OUTPUT);
   pinMode(enable3, OUTPUT);
   pinMode(enable4, OUTPUT);
-
+  pinMode(a1, INPUT_PULLUP);
 }
 
 void loop() {

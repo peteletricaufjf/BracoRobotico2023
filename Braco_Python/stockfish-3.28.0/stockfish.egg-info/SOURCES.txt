@@ -1,0 +1,9 @@
+README.md
+setup.cfg
+setup.py
+stockfish/__init__.py
+stockfish/models.py
+stockfish.egg-info/PKG-INFO
+stockfish.egg-info/SOURCES.txt
+stockfish.egg-info/dependency_links.txt
+stockfish.egg-info/top_level.txt

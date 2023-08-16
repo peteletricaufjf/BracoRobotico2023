@@ -3,19 +3,20 @@
 #include <LiquidCrystal_I2C.h>
 
 
-#define BOTAOSIM    //pino do botao de sim
-#define BOTAONAO    //pino do botao de nao
+#define BOTAOSIM 3   //pino do botao de sim
+#define BOTAONAO 2   //pino do botao de nao
 
-#define SIG 3
+#define SIG 4
 #define S0 A0
 #define S1 A1
 #define S2 A2
 #define S3 A3
 #define ENABLE1 8
 #define ENABLE2 9
-#define ENABLE3 6
-#define ENABLE4 7
+#define ENABLE3 10
+#define ENABLE4 11
 using namespace admux;
+#define a1 6
 
 LiquidCrystal_I2C lcd(0x27, 16,2);
 
@@ -196,7 +197,7 @@ void lertabuleiro_humano()
       colunale++;
     }
   }
-  
+  leitura_atual[7][7] = digitalRead(a1);
   for(int x = 0;x<8;x++){
     for(int y = 0;y<8;y++){
       tabuleiro_atual[x][y] = leitura_atual[x][y];
@@ -295,18 +296,18 @@ void setup() {
   pinMode(enable2, OUTPUT);
   pinMode(enable3, OUTPUT);
   pinMode(enable4, OUTPUT);
+  pinMode(a1, INPUT_PULLUP);
   
   lcd.init();
   lcd.backlight();
-  pinMode(botaossim,INPUT_PULLUP);
+  pinMode(botaosim,INPUT_PULLUP);
   pinMode(botaonao,INPUT_PULLUP);
 
 }
 
 void loop() {
-
   lcdIniciaGame();  //inicia o jogo
-  botaoEsperaSim(); //espera confirmar pra inicio
+  botaoEsperaSim(botaosim); //espera confirmar pra inicio
 
   lcdAskVaiComer(); //pergunta se vai comer a peça
 

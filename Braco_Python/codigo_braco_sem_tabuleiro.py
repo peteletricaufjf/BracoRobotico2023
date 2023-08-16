@@ -8,10 +8,9 @@ import serial
 import Funcoes_Braco as funcB #importariamos o novo módulo chamado Funcoes_Braco
 
 import math
+import pandas as pd
 
 #aqui temos que baixar o stockfish no pc que formos usar (aquele lenovo ta horrivel, vamos usar msm assim?)
-
-import pandas as pd
 
 # Monta a matriz vazia referente as casas do tabuleiro
 
@@ -33,19 +32,24 @@ tabuleiro["h"] = [[97,67],[92,87],[90,102],[88,116],[89,128],[92,140],[96,151],[
 
 
 # Abre uma conexão serial com o Arduino
-serTabuleiro = serial.Serial('COM8',115200,timeout= None)
+# serTabuleiro = serial.Serial('COM8',115200,timeout= None)
 
 # Recebe uma string do Arduino referente a jogada
-jogada_usuario = serTabuleiro.readline()
+# jogada_usuario = serTabuleiro.readline()
 
 # Fatiou passou
-jogada_usuario[2:6]
+# jogada_usuario[2:6]
+
+# Vamos dar a jogada do usuario ao invés do tabuleiro dar 
+jogada_usuario = input("Qual foi o movimento feito pelo usuário? ")
 
 # Fecha a conexão serial
-serTabuleiro.close()
+# serTabuleiro.close()
 
 #seleciona a engine desejada e especifica o pathing de onde ela foi baixada, devemos especificar o path no pc escolhido
-engine = chess.engine.SimpleEngine.popen_uci("/content/stockfish_14_linux_x64_popcnt/stockfish_14_x64_popcnt") 
+#IMPORTANTE: TEM QUE TER O r ANTES DA STRING DO CAMINHO DO ARQUIVO DE ONDE ESTÁ O STOCKFISH OK?????
+
+engine = chess.engine.SimpleEngine.popen_uci(r"C:\Users\PC PET Eletrica\Desktop\RepositorioBraco\BracoRobotico2023\stockfish\stockfish-windows-x86-64-modern.exe") 
 
 board = chess.Board() #inicializa o objeto tabuleiro de xadrez na posição inicial
 
@@ -63,7 +67,9 @@ movimentoBraco = engine.play(board, chess.engine.Limit(time=1.0)) #obtém um obj
                                                                   #draw_offered -> retorna booleano de acordo se a engine quis oferecer empate ou nao
                                                                   #resigned->
 
+print(movimentoBraco.move)
 board.push(movimentoBraco.move) #joga pro tabuleiro a jogada do braço
+print(board.is_checkmate())
 jogadabraco = str(movimentoBraco.move) # transforma jogada que ta em string para coordenadas que o braço ira efetuar movimentos
 # move1 = chess.Move.from_uci(jogadabraco) # ex: move1 = chess.Move.from_uci('d2d4')
 # board.push(move1)
@@ -87,10 +93,7 @@ theta2 = tabuleiro.loc[l2, c2][0]
 phi2 = tabuleiro.loc[l2, c2][1]
 
 
-# timeout é o tempo que o python irá esperar para receber o dado do arduino, nesse caso coloquei o tempo como indefinido
-serBraco = serial.Serial('COM8', 115200,timeout= None) # ajuste a porta serial e a taxa de transmissão de acordo com as configurações do seu Arduino
-
 import time
 
-funcB.seComeu(serBraco,pacman,theta2,phi2)
-funcB.movimentaPeca(serBraco,theta1,phi1,theta2,phi2)
+funcB.seComeu(pacman,theta2,phi2)
+funcB.movimentaPeca(theta1,phi1,theta2,phi2)
