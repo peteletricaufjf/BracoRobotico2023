@@ -19,7 +19,7 @@ ferrarezi = 70
 bernardo = 140
 
 def seComeu(pacman,theta2,phi2):
-    if pacman is True:
+    if pacman is False:
         # Manda o braço subir somente o eixo z para evitar de esbarrar nas peças
         coord = f"0, 0 ,133, 500, 500, 0"  # (angulo 1, angulo 2, z, vel, acel, eletroimã)
         serBraco.write(coord.encode())

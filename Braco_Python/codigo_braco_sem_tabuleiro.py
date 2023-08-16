@@ -10,15 +10,13 @@ import Funcoes_Braco as funcB #importariamos o novo módulo chamado Funcoes_Brac
 import math
 import pandas as pd
 
-#aqui temos que baixar o stockfish no pc que formos usar (aquele lenovo ta horrivel, vamos usar msm assim?)
-
-# Monta a matriz vazia referente as casas do tabuleiro
+# Monta o dataframe referente as casas do tabuleiro
 
 col = ["a","b","c","d","e","f","g","h"]
 index = [1,2,3,4,5,6,7,8]
 tabuleiro = pd.DataFrame(index = index, columns = col)
 
-# Preenche a matriz com as coordenadas de cada casa
+# Preenche o dataframe com as coordenadas de cada casa
 
 tabuleiro["a"] = [[64,63],[55,83],[50,98],[42,112],[36,124],[33,136],[23,145],[17,154]]
 tabuleiro["b"] = [[69,65],[58,88],[52,102],[46,118],[45,129],[36,142],[35,154],[29,165]]
@@ -40,9 +38,6 @@ tabuleiro["h"] = [[97,67],[92,87],[90,102],[88,116],[89,128],[92,140],[96,151],[
 # Fatiou passou
 # jogada_usuario[2:6]
 
-# Vamos dar a jogada do usuario ao invés do tabuleiro dar 
-jogada_usuario = input("Qual foi o movimento feito pelo usuário? ")
-
 # Fecha a conexão serial
 # serTabuleiro.close()
 
@@ -51,49 +46,64 @@ jogada_usuario = input("Qual foi o movimento feito pelo usuário? ")
 
 engine = chess.engine.SimpleEngine.popen_uci(r"C:\Users\PC PET Eletrica\Desktop\RepositorioBraco\BracoRobotico2023\stockfish\stockfish-windows-x86-64-modern.exe") 
 
-board = chess.Board() #inicializa o objeto tabuleiro de xadrez na posição inicial
+#inicializa o objeto tabuleiro de xadrez na posição inicial
+board = chess.Board() 
 
-# aqui entraria comunicação com arduino e interpretação movimento humano e gera string que seria o movimento
-# !!SEMPRE PRIMEIRO MOVIMENTO ENVIADO SERÁ DAS PEÇAS BRANCAS
-move1 = chess.Move.from_uci(jogada_usuario) #inicializa um objeto move1 com o comando de movimento a partir da string de jogada "e2e4"(simulando jogada de humano que foi e2e4)
+while True:
+    
+    # Vamos dar a jogada do usuario ao invés do tabuleiro dar 
+    jogada_usuario = input("Qual foi o movimento feito pelo usuário? ")
+    
+    # aqui entraria comunicação com arduino e interpretação movimento humano e gera string que seria o movimento
+    # !!SEMPRE PRIMEIRO MOVIMENTO ENVIADO SERÁ DAS PEÇAS BRANCAS
+    move1 = chess.Move.from_uci(jogada_usuario) #inicializa um objeto move1 com o comando de movimento a partir da string de jogada "e2e4"(simulando jogada de humano que foi e2e4)
 
-board.push(move1) #comando que envia o objeto move1 com o comando de movimento para o tabuleiro de jogo atual
+    board.push(move1) #comando que envia o objeto move1 com o comando de movimento para o tabuleiro de jogo atual
 
-movimentoBraco = engine.play(board, chess.engine.Limit(time=1.0)) #obtém um objeto de jogada a partir do pensamento da IA Stockfish
-                                                                  #o objeto contem as seguintes informações
-                                                                  #move -> string de jogada
-                                                                  #ponder -> string de jogada que foi considerada durante pensamento IA
-                                                                  #info{}-> um dicionario de informação extra mandada pela engine
-                                                                  #draw_offered -> retorna booleano de acordo se a engine quis oferecer empate ou nao
-                                                                  #resigned->
+    #se nao for cheque mate, ve o movimento que engine quer fazer e executa ele.    
+    if not board.is_checkmate():
 
-print(movimentoBraco.move)
-board.push(movimentoBraco.move) #joga pro tabuleiro a jogada do braço
-print(board.is_checkmate())
-jogadabraco = str(movimentoBraco.move) # transforma jogada que ta em string para coordenadas que o braço ira efetuar movimentos
-# move1 = chess.Move.from_uci(jogadabraco) # ex: move1 = chess.Move.from_uci('d2d4')
-# board.push(move1)
+        movimentoBraco = engine.play(board, chess.engine.Limit(time=1.0)) #obtém um objeto de jogada a partir do pensamento da IA Stockfish
+                                                                        #o objeto contem as seguintes informações
+                                                                        #move -> string de jogada
+                                                                        #ponder -> string de jogada que foi considerada durante pensamento IA
+                                                                        #info{}-> um dicionario de informação extra mandada pela engine
+                                                                        #draw_offered -> retorna booleano de acordo se a engine quis oferecer empate ou nao
+                                                                        #resigned->
 
-# movimentoBraco = engine.play(board,chess.engine.Limit(time=1.0))
-pacman = board.is_capture(movimentoBraco.move)  #cria a variavel pacman que será um booleano. A partir do objeto "board" usamos o metodo "is_capture"
-                                                #passando para esse metodo a variavel do tipo chess.move "movimentoBraco.move"
+        print(movimentoBraco.move)
+        board.push(movimentoBraco.move) #joga pro tabuleiro a jogada do braço
+        jogadabraco = str(movimentoBraco.move) # transforma jogada que ta em string para coordenadas que o braço ira efetuar movimentos
+        # move1 = chess.Move.from_uci(jogadabraco) # ex: move1 = chess.Move.from_uci('d2d4')
+        # board.push(move1)
 
-# Divide os valores da string para ter separado os valores das linhas e colunas
-# ex: coluna do primeiro movimento: c1
-#     linha do primeiro movimento: l1
-c1 = jogadabraco[0]
-l1 = float(jogadabraco[1])
-c2 = jogadabraco[2]
-l2 = float(jogadabraco[3])
+        # movimentoBraco = engine.play(board,chess.engine.Limit(time=1.0))
+        pacman = board.is_capture(movimentoBraco.move)  #cria a variavel pacman que será um booleano. A partir do objeto "board" usamos o metodo "is_capture"
+                                                        #passando para esse metodo a variavel do tipo chess.move "movimentoBraco.move"
 
-theta1 = tabuleiro.loc[l1, c1][0]
-phi1 = tabuleiro.loc[l1, c1][1]
+        # Divide os valores da string para ter separado os valores das linhas e colunas
+        # ex: coluna do primeiro movimento: c1
+        #     linha do primeiro movimento: l1
+        c1 = jogadabraco[0]
+        l1 = float(jogadabraco[1])
+        c2 = jogadabraco[2]
+        l2 = float(jogadabraco[3])
 
-theta2 = tabuleiro.loc[l2, c2][0]
-phi2 = tabuleiro.loc[l2, c2][1]
+        theta1 = tabuleiro.loc[l1, c1][0]
+        phi1 = tabuleiro.loc[l1, c1][1]
+
+        theta2 = tabuleiro.loc[l2, c2][0]
+        phi2 = tabuleiro.loc[l2, c2][1]
 
 
-import time
+        import time
 
-funcB.seComeu(pacman,theta2,phi2)
-funcB.movimentaPeca(theta1,phi1,theta2,phi2)
+        funcB.seComeu(pacman,theta2,phi2)
+        funcB.movimentaPeca(theta1,phi1,theta2,phi2)
+
+        if board.is_checkmate():
+            print("CHECKMATE DO BRAÇO!! O JOGO ACABOU.")
+            break
+    else:
+        print("CHECKMATE DO PLAYER!! O JOGO ACABOU.")
+        break
