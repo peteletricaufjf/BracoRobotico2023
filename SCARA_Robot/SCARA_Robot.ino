@@ -47,12 +47,12 @@ void setup() {
   pinMode(eletroima, OUTPUT);
 
   // Stepper motors max speed
-  stepper1.setMaxSpeed(4000);
-  stepper1.setAcceleration(2000);
-  stepper2.setMaxSpeed(4000);
-  stepper2.setAcceleration(2000);
-  stepper4.setMaxSpeed(4000);
-  stepper4.setAcceleration(2000);
+  stepper1.setMaxSpeed(2000);
+  stepper1.setAcceleration(700);
+  stepper2.setMaxSpeed(3500);
+  stepper2.setAcceleration(1900);
+  stepper4.setMaxSpeed(3000);
+  stepper4.setAcceleration(1700);
 
   // initial eletroimã value - desligado (logica dessa merda tá invertida e fiquei com preguiça de mudar o fio)
   // data[5] = 1;

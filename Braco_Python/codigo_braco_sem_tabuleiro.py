@@ -18,14 +18,14 @@ tabuleiro = pd.DataFrame(index = index, columns = col)
 
 # Preenche o dataframe com as coordenadas de cada casa
 
-tabuleiro["a"] = [[64,63],[55,83],[50,98],[42,112],[36,124],[33,136],[23,145],[17,154]]
-tabuleiro["b"] = [[69,65],[58,88],[52,102],[46,118],[45,129],[36,142],[35,154],[29,165]]
-tabuleiro["c"] = [[69,72],[62,92],[56,107],[52,121],[48,135],[45,147],[42,159],[46,173]]
-tabuleiro["d"] = [[73,75],[68,94],[62,110],[58,124],[55,137],[55,150],[54,163],[60,178]]
-tabuleiro["e"] = [[78,77],[72,95],[68,110],[65,125],[64,138],[63,150],[66,164],[76,180]]
-tabuleiro["f"] = [[84,75],[80,93],[75,109],[73,123],[73,137],[76,151],[77,161],[86,176]]
-tabuleiro["g"] = [[90,74],[86,90],[83,106],[81,120],[81,133],[83,146],[88,157],[100,169]]
-tabuleiro["h"] = [[97,67],[92,87],[90,102],[88,116],[89,128],[92,140],[96,151],[105,162]]
+tabuleiro["a"] = [[64,63,150],[55,82,154],[48,99,156],[42,113,157],[36,125,159],[31,137,159],[26,147,160],[19,156,160]]
+tabuleiro["b"] = [[69,65,150],[58,89,155],[52,105,157],[47,118,158],[42,131,159],[38,143,160],[34,154,161],[31,166,160]]
+tabuleiro["c"] = [[69,72,150],[62,93,155],[58,109,157],[54,122,160],[50,135,160],[47,148,161],[45,161,160],[45,174,161]]
+tabuleiro["d"] = [[73,75,150],[68,95,156],[63,111,158],[61,125,160],[58,138,160],[57,151,161],[57,164,161],[64,179,161]]
+tabuleiro["e"] = [[78,77,150],[74,95,156],[71,111,158],[67,126,161],[66,139,161],[67,152,161],[69,164,162],[80,180,161]]
+tabuleiro["f"] = [[84,75,150],[80,94,156],[77,110,158],[75,124,161],[75,137,160],[77,149,161],[81,162,161],[90,175,161]]
+tabuleiro["g"] = [[90,74,150],[87,91,155],[84,107,157],[82,121,160],[83,133,159],[85,145,160],[90,159,161],[99,169,161]]
+tabuleiro["h"] = [[97,67,150],[94,86,156],[91,102,157],[91,116,159],[91,128,159],[94,139,159],[99,152,160],[106,160,160]]
 
 
 
@@ -38,13 +38,14 @@ tabuleiro["h"] = [[97,67],[92,87],[90,102],[88,116],[89,128],[92,140],[96,151],[
 # Fatiou passou
 # jogada_usuario[2:6]
 
+
 # Fecha a conexão serial
 # serTabuleiro.close()
 
 #seleciona a engine desejada e especifica o pathing de onde ela foi baixada, devemos especificar o path no pc escolhido
 #IMPORTANTE: TEM QUE TER O r ANTES DA STRING DO CAMINHO DO ARQUIVO DE ONDE ESTÁ O STOCKFISH OK?????
 
-engine = chess.engine.SimpleEngine.popen_uci(r"C:\Users\PC PET Eletrica\Desktop\RepositorioBraco\BracoRobotico2023\stockfish\stockfish-windows-x86-64-modern.exe") 
+engine = chess.engine.SimpleEngine.popen_uci(r"D:\Arquivos\BracoRobotico2023\Braco_Python\stockfish-windows-x86-64-avx2\stockfish\stockfish-windows-x86-64-avx2.exe") 
 
 #inicializa o objeto tabuleiro de xadrez na posição inicial
 board = chess.Board() 
@@ -72,15 +73,18 @@ while True:
                                                                         #resigned->
 
         print(movimentoBraco.move)
+        
+        pacman = board.is_capture(movimentoBraco.move)  #cria a variavel pacman que será um booleano. A partir do objeto "board" usamos o metodo "is_capture"
+                                                        #passando para esse metodo a variavel do tipo chess.move "movimentoBraco.move"
+        print(pacman)
+        
         board.push(movimentoBraco.move) #joga pro tabuleiro a jogada do braço
         jogadabraco = str(movimentoBraco.move) # transforma jogada que ta em string para coordenadas que o braço ira efetuar movimentos
         # move1 = chess.Move.from_uci(jogadabraco) # ex: move1 = chess.Move.from_uci('d2d4')
         # board.push(move1)
 
         # movimentoBraco = engine.play(board,chess.engine.Limit(time=1.0))
-        pacman = board.is_capture(movimentoBraco.move)  #cria a variavel pacman que será um booleano. A partir do objeto "board" usamos o metodo "is_capture"
-                                                        #passando para esse metodo a variavel do tipo chess.move "movimentoBraco.move"
-
+        
         # Divide os valores da string para ter separado os valores das linhas e colunas
         # ex: coluna do primeiro movimento: c1
         #     linha do primeiro movimento: l1
@@ -91,16 +95,18 @@ while True:
 
         theta1 = tabuleiro.loc[l1, c1][0]
         phi1 = tabuleiro.loc[l1, c1][1]
+        z1 = tabuleiro.loc[l1, c1][2]
 
         theta2 = tabuleiro.loc[l2, c2][0]
         phi2 = tabuleiro.loc[l2, c2][1]
+        z2 = tabuleiro.loc[l2, c2][2]
 
 
         import time
-
-        funcB.seComeu(pacman,theta2,phi2)
-        funcB.movimentaPeca(theta1,phi1,theta2,phi2)
-
+        
+        funcB.seComeu(pacman,theta2,phi2,z2)
+        funcB.movimentaPeca(theta1,phi1,z1,theta2,phi2,z2)
+        
         if board.is_check():
             print("VOCÊ ESTÁ EM CHEQUE! ")
 

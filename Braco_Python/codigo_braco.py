@@ -33,7 +33,7 @@ tabuleiro["h"] = [[97,67],[92,87],[90,102],[88,116],[89,128],[92,140],[96,151],[
 
 
 # Abre uma conexão serial com o Arduino
-serTabuleiro = serial.Serial('COM8',115200,timeout= None)
+serTabuleiro = serial.Serial('COM5',115200,timeout= None)
 
 # Recebe uma string do Arduino referente a jogada
 jogada_usuario = serTabuleiro.readline()
