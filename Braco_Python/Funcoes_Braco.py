@@ -5,7 +5,7 @@ import time
 
 # timeout é o tempo que o python irá esperar para receber o dado do arduino, nesse caso coloquei o tempo como indefinido
 # ajuste a porta serial e a taxa de transmissão de acordo com as configurações do seu Arduino
-serBraco = serial.Serial('COM5', 115200, timeout=None) 
+serBraco = serial.Serial('COM8', 115200, timeout=None) 
 
 def confere(serBraco):
     opa = 'hugostoso'
@@ -42,7 +42,7 @@ def seComeu(pacman,theta2,phi2,z2):
         confere(serBraco)
 
         # Manda o braço levar a peça para fora do jogo
-        coord = f"0, 0 ,{ferrarezi}, 500, 500, 0"
+        coord = f"115, 75 ,{ferrarezi}, 500, 500, 0"
         serBraco.write(coord.encode())
         confere(serBraco)
 
@@ -84,47 +84,6 @@ def movimentaPeca(theta1,phi1,z1,theta2,phi2,z2):
     confere(serBraco)
 
     # Manda o braço para uma posição inicial
-    coord = f"0, 0, {bernardo}, 500, 500, 0"
-    serBraco.write(coord.encode())
-    confere(serBraco)
-
-def movimentaPecaTeste():
-    print('passo 1')
-    
-    coord = f"50, 50, 100, 500, 500, 0"
-    serBraco.write(coord.encode())
-    confere(serBraco)
-    print('descer')
-    coord = f"50, 50, 225, 500, 500, 0"
-    serBraco.write(coord.encode())
-    confere(serBraco)
-    print('subir')
-    coord = f"50, 50, 225, 500, 500, 0"
-    serBraco.write(coord.encode())
-    confere(serBraco)
-
-    print('passo 2')
-    coord = f"200, 10, 100, 500, 500, 0"
-    serBraco.write(coord.encode())
-    confere(serBraco)
-    print('descer')
-    coord = f"200, 10, 225, 500, 500, 0"
-    serBraco.write(coord.encode())
-    confere(serBraco)
-    print('subir')
-    coord = f"200, 10, 100, 500, 500, 0"
-    serBraco.write(coord.encode())
-    confere(serBraco)
-
-    print('passo 3')
-    coord = f"100, 100, 100, 500, 500, 0"
-    serBraco.write(coord.encode())
-    confere(serBraco)
-    print('descer')
-    coord = f"100, 100, 225, 500, 500, 0"
-    serBraco.write(coord.encode())
-    confere(serBraco)
-    print('subir')
-    coord = f"100, 100, 100, 500, 500, 0"
+    coord = f"30, 180, {bernardo}, 500, 500, 0"
     serBraco.write(coord.encode())
     confere(serBraco)
