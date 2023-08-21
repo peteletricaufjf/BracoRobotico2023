@@ -1,12 +1,7 @@
-# pip install chess
-
-# pip install pyserial
-
 import chess
 import chess.engine
 import serial
 import Funcoes_Braco as funcB #importariamos o novo módulo chamado Funcoes_Braco
-
 import math
 import pandas as pd
 
@@ -28,20 +23,6 @@ tabuleiro["g"] = [[92,70,155],[87,91,155],[84,107,157],[82,121,160],[83,133,159]
 tabuleiro["h"] = [[99,66,155],[94,86,156],[91,102,157],[91,116,159],[91,128,159],[94,139,159],[99,152,160],[106,160,160]]
 
 
-
-# Abre uma conexão serial com o Arduino
-# serTabuleiro = serial.Serial('COM8',115200,timeout= None)
-
-# Recebe uma string do Arduino referente a jogada
-# jogada_usuario = serTabuleiro.readline()
-
-# Fatiou passou
-# jogada_usuario[2:6]
-
-
-# Fecha a conexão serial
-# serTabuleiro.close()
-
 #seleciona a engine desejada e especifica o pathing de onde ela foi baixada, devemos especificar o path no pc escolhido
 #IMPORTANTE: TEM QUE TER O r ANTES DA STRING DO CAMINHO DO ARQUIVO DE ONDE ESTÁ O STOCKFISH OK?????
 
@@ -49,6 +30,9 @@ engine = chess.engine.SimpleEngine.popen_uci(r"C:\Users\User\Desktop\código bra
 
 #inicializa o objeto tabuleiro de xadrez na posição inicial
 board = chess.Board() 
+
+skill = input("Qual será a dificuldade? (0-20)")
+engine.configure({"Skill Level": skill})
 
 while True:
     
