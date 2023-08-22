@@ -36,75 +36,85 @@ engine.configure({"Skill Level": skill})
 
 while True:
     
-    # Vamos dar a jogada do usuario ao invés do tabuleiro dar 
-    jogada_usuario = input("Qual foi o movimento feito pelo usuário? ")
-    
-    # aqui entraria comunicação com arduino e interpretação movimento humano e gera string que seria o movimento
-    # !!SEMPRE PRIMEIRO MOVIMENTO ENVIADO SERÁ DAS PEÇAS BRANCAS
-    move1 = chess.Move.from_uci(jogada_usuario) #inicializa um objeto move1 com o comando de movimento a partir da string de jogada "e2e4"(simulando jogada de humano que foi e2e4)
+    try:
+        # Vamos dar a jogada do usuario ao invés do tabuleiro dar 
+        jogada_usuario = input("Qual foi o movimento feito pelo usuário? ")
+        
+        # aqui entraria comunicação com arduino e interpretação movimento humano e gera string que seria o movimento
+        # !!SEMPRE PRIMEIRO MOVIMENTO ENVIADO SERÁ DAS PEÇAS BRANCAS
+        move1 = chess.Move.from_uci(jogada_usuario) #inicializa um objeto move1 com o comando de movimento a partir da string de jogada "e2e4"(simulando jogada de humano que foi e2e4)
 
-    # Verifica se o movimento foi legal ou não 
-    while board.is_legal(move1) == False:
-            jogada_usuario = input("Movimento inválido, digite novamente: ")
-            move1 = chess.Move.from_uci(jogada_usuario)
+        
+        
+        # Verifica se o movimento foi legal ou não 
+        while board.is_legal(move1) == False:
+                jogada_usuario = input("Movimento inválido, digite novamente: ")
+                move1 = chess.Move.from_uci(jogada_usuario)
+                
+        
+        
+        board.push(move1) #comando que envia o objeto move1 com o comando de movimento para o tabuleiro de jogo atual
+        
+
+        #se nao for cheque mate, ve o movimento que engine quer fazer e executa ele.    
+        if not board.is_checkmate():
+
+            movimentoBraco = engine.play(board, chess.engine.Limit(time=1.0)) #obtém um objeto de jogada a partir do pensamento da IA Stockfish
+                                                                            #o objeto contem as seguintes informações
+                                                                            #move -> string de jogada
+                                                                            #ponder -> string de jogada que foi considerada durante pensamento IA
+                                                                            #info{}-> um dicionario de informação extra mandada pela engine
+                                                                            #draw_offered -> retorna booleano de acordo se a engine quis oferecer empate ou nao
+                                                                            #resigned->
+
+            print(movimentoBraco.move)
+            
+            pacman = board.is_capture(movimentoBraco.move)  #cria a variavel pacman que será um booleano. A partir do objeto "board" usamos o metodo "is_capture"
+                                                            #passando para esse metodo a variavel do tipo chess.move "movimentoBraco.move"
+            print(pacman)
+            
+            board.push(movimentoBraco.move) #joga pro tabuleiro a jogada do braço
+            # board.get_board_visual()
+            jogadabraco = str(movimentoBraco.move) # transforma jogada que ta em string para coordenadas que o braço ira efetuar movimentos
+            # move1 = chess.Move.from_uci(jogadabraco) # ex: move1 = chess.Move.from_uci('d2d4')
+            # board.push(move1)
+
+            # movimentoBraco = engine.play(board,chess.engine.Limit(time=1.0))
+            
+            # Divide os valores da string para ter separado os valores das linhas e colunas
+            # ex: coluna do primeiro movimento: c1
+            #     linha do primeiro movimento: l1
+            c1 = jogadabraco[0]
+            l1 = float(jogadabraco[1])
+            c2 = jogadabraco[2]
+            l2 = float(jogadabraco[3])
+
+            theta1 = tabuleiro.loc[l1, c1][0]
+            phi1 = tabuleiro.loc[l1, c1][1]
+            z1 = tabuleiro.loc[l1, c1][2]
+
+            theta2 = tabuleiro.loc[l2, c2][0]
+            phi2 = tabuleiro.loc[l2, c2][1]
+            z2 = tabuleiro.loc[l2, c2][2]
+
+
+            import time
+            
+            if board.is_check():
+                print("VOCÊ ESTÁ EM CHEQUE! ")
+
+            if board.is_checkmate():
+                print("CHECKMATE DO BRAÇO!! O JOGO ACABOU. ")
+                break
+        else:
+            print("CHECKMATE DO PLAYER!! O JOGO ACABOU. ")
+            break
+            
+            funcB.seComeu(pacman,theta2,phi2,z2)
+            funcB.movimentaPeca(theta1,phi1,z1,theta2,phi2,z2)
             
     
-    board.push(move1) #comando que envia o objeto move1 com o comando de movimento para o tabuleiro de jogo atual
-    
-
-    #se nao for cheque mate, ve o movimento que engine quer fazer e executa ele.    
-    if not board.is_checkmate():
-
-        movimentoBraco = engine.play(board, chess.engine.Limit(time=1.0)) #obtém um objeto de jogada a partir do pensamento da IA Stockfish
-                                                                        #o objeto contem as seguintes informações
-                                                                        #move -> string de jogada
-                                                                        #ponder -> string de jogada que foi considerada durante pensamento IA
-                                                                        #info{}-> um dicionario de informação extra mandada pela engine
-                                                                        #draw_offered -> retorna booleano de acordo se a engine quis oferecer empate ou nao
-                                                                        #resigned->
-
-        print(movimentoBraco.move)
+    except Exception as e:
+        print("Erro no loop principal:", e.args)
         
-        pacman = board.is_capture(movimentoBraco.move)  #cria a variavel pacman que será um booleano. A partir do objeto "board" usamos o metodo "is_capture"
-                                                        #passando para esse metodo a variavel do tipo chess.move "movimentoBraco.move"
-        print(pacman)
         
-        board.push(movimentoBraco.move) #joga pro tabuleiro a jogada do braço
-        # board.get_board_visual()
-        jogadabraco = str(movimentoBraco.move) # transforma jogada que ta em string para coordenadas que o braço ira efetuar movimentos
-        # move1 = chess.Move.from_uci(jogadabraco) # ex: move1 = chess.Move.from_uci('d2d4')
-        # board.push(move1)
-
-        # movimentoBraco = engine.play(board,chess.engine.Limit(time=1.0))
-        
-        # Divide os valores da string para ter separado os valores das linhas e colunas
-        # ex: coluna do primeiro movimento: c1
-        #     linha do primeiro movimento: l1
-        c1 = jogadabraco[0]
-        l1 = float(jogadabraco[1])
-        c2 = jogadabraco[2]
-        l2 = float(jogadabraco[3])
-
-        theta1 = tabuleiro.loc[l1, c1][0]
-        phi1 = tabuleiro.loc[l1, c1][1]
-        z1 = tabuleiro.loc[l1, c1][2]
-
-        theta2 = tabuleiro.loc[l2, c2][0]
-        phi2 = tabuleiro.loc[l2, c2][1]
-        z2 = tabuleiro.loc[l2, c2][2]
-
-
-        import time
-        
-        funcB.seComeu(pacman,theta2,phi2,z2)
-        funcB.movimentaPeca(theta1,phi1,z1,theta2,phi2,z2)
-        
-        if board.is_check():
-            print("VOCÊ ESTÁ EM CHEQUE! ")
-
-        if board.is_checkmate():
-            print("CHECKMATE DO BRAÇO!! O JOGO ACABOU. ")
-            break
-    else:
-        print("CHECKMATE DO PLAYER!! O JOGO ACABOU. ")
-        break
