@@ -26,7 +26,7 @@ tabuleiro["h"] = [[99,66,155],[94,86,156],[91,102,157],[91,116,159],[91,128,159]
 #seleciona a engine desejada e especifica o pathing de onde ela foi baixada, devemos especificar o path no pc escolhido
 #IMPORTANTE: TEM QUE TER O r ANTES DA STRING DO CAMINHO DO ARQUIVO DE ONDE ESTÁ O STOCKFISH OK?????
 
-engine = chess.engine.SimpleEngine.popen_uci(r"C:\Users\User\Desktop\código braço sem tabuleiro\stockfish\stockfish-windows-x86-64-avx2.exe") 
+engine = chess.engine.SimpleEngine.popen_uci(r"D:\Arquivos\BracoRobotico2023\Braco_Python\stockfish-windows-x86-64-avx2\stockfish\stockfish-windows-x86-64-avx2.exe") 
 
 #inicializa o objeto tabuleiro de xadrez na posição inicial
 board = chess.Board() 
@@ -38,6 +38,7 @@ while True:
     
     try:
         # Vamos dar a jogada do usuario ao invés do tabuleiro dar 
+        print(engine.play(board, chess.engine.Limit(time=1.0)).move)
         jogada_usuario = input("Qual foi o movimento feito pelo usuário? ")
         
         # aqui entraria comunicação com arduino e interpretação movimento humano e gera string que seria o movimento
@@ -73,6 +74,11 @@ while True:
                                                             #passando para esse metodo a variavel do tipo chess.move "movimentoBraco.move"
             print(pacman)
             
+            roque = board.is_castling(movimentoBraco.move)
+            roque_curto = board.is_kingside_castling(movimentoBraco.move)
+            roque_longo = board.is_queenside_castling(movimentoBraco.move)
+            
+            
             board.push(movimentoBraco.move) #joga pro tabuleiro a jogada do braço
             # board.get_board_visual()
             jogadabraco = str(movimentoBraco.move) # transforma jogada que ta em string para coordenadas que o braço ira efetuar movimentos
@@ -107,12 +113,14 @@ while True:
                 print("CHECKMATE DO BRAÇO!! O JOGO ACABOU. ")
                 break
         else:
+            funcB.seComeu(pacman,theta2,phi2,z2)
+            funcB.movimentaPeca(theta1,phi1,z1,theta2,phi2,z2)
             print("CHECKMATE DO PLAYER!! O JOGO ACABOU. ")
             break
             
-            funcB.seComeu(pacman,theta2,phi2,z2)
-            funcB.movimentaPeca(theta1,phi1,z1,theta2,phi2,z2)
-            
+        funcB.seComeu(pacman,theta2,phi2,z2)
+        funcB.movimentaPeca(theta1,phi1,z1,theta2,phi2,z2,roque)
+        funcB.fazroque(roque_curto,roque_longo,tabuleiro)
     
     except Exception as e:
         print("Erro no loop principal:", e.args)
