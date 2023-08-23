@@ -78,18 +78,10 @@ while True:
             roque_curto = board.is_kingside_castling(movimentoBraco.move)
             roque_longo = board.is_queenside_castling(movimentoBraco.move)
             
-            
             board.push(movimentoBraco.move) #joga pro tabuleiro a jogada do braço
-            # board.get_board_visual()
             jogadabraco = str(movimentoBraco.move) # transforma jogada que ta em string para coordenadas que o braço ira efetuar movimentos
-            # move1 = chess.Move.from_uci(jogadabraco) # ex: move1 = chess.Move.from_uci('d2d4')
-            # board.push(move1)
-
-            # movimentoBraco = engine.play(board,chess.engine.Limit(time=1.0))
             
             # Divide os valores da string para ter separado os valores das linhas e colunas
-            # ex: coluna do primeiro movimento: c1
-            #     linha do primeiro movimento: l1
             c1 = jogadabraco[0]
             l1 = float(jogadabraco[1])
             c2 = jogadabraco[2]
@@ -124,5 +116,3 @@ while True:
     
     except Exception as e:
         print("Erro no loop principal:", e.args)
-        
-        
