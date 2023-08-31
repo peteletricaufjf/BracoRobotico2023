@@ -1,0 +1,32 @@
+O QUE PRECISAMOS ENTENDER E FAZER PARA APLICAR RECONHECIMENTO DE IMAGEM
+
+Ver no código enviado no grupo (repositório está clonado no pc embaixo do banner da triade  tambem)
+
+    Precisamos de 2 coisas desse código: como capturar as imagens, como manipulá-las para pegar a string de move
+        
+        - Funções internas do código do cara que precisamos entender/usar:
+            ~ get_warp_img  -> faz uma transformação na imagem para ver questão de angulação
+                - FUNÇÕES DO OPENCV ou numpy UTILIZADAS:
+                ~ np.load -> pega valores da imagem a partir de um npz
+                ~ findHomography -> não sei o que faz ainda ao certo
+                ~ warpPerspective -> faz a transformação da imagem a partir de uma matriz de transformação
+
+            
+            ~ find_current_past_position -> pega as 2 imagens de antes e depois e manipula para gerar a string de movimento do jogo
+                - FUNÇÕES DO OPENCV UTILIZADAS:
+                ~ absdiff -> acha diferença absoluta entre 2 imagens
+                ~ cvtColor -> ACHO que coloca na cor desejada a partir de uma flag algo assim
+                ~ threshhold -> ACHO que atua como um tipo de filtro para tirar parte do ruido
+                ~ findContours -> ACHO que acha os contornos dos objetos
+                ~ contourArea -> não sei o que faz
+                ~ boundingRect -> não sei o que faz
+        
+        
+        -Funções utilizadas (pesquisar no doc do OpenCV p/ entender melhor):
+            ~ VideoCapture(onde ta webcam).read() -> captura imagem
+            ~ resize(imagem,tam) -> redimensiona imagem 
+        
+
+Basicamente, do código main do cara, precisamos usar literalmente da linha 483 a 500
+    No arquivo read_warp_img precisamos de tudo
+    No arquivo find_position_black precisamos de tudo tambem acho
