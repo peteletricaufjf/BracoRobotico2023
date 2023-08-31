@@ -38,7 +38,7 @@ while True:
     
     try:
         # Vamos dar a jogada do usuario ao invés do tabuleiro dar 
-        print(engine.play(board, chess.engine.Limit(time=1.0)).move)
+        # print(engine.play(board, chess.engine.Limit(time=1.0)).move)
         jogada_usuario = input("Qual foi o movimento feito pelo usuário? ")
         
         # aqui entraria comunicação com arduino e interpretação movimento humano e gera string que seria o movimento
@@ -67,14 +67,27 @@ while True:
                                                                             #info{}-> um dicionario de informação extra mandada pela engine
                                                                             #draw_offered -> retorna booleano de acordo se a engine quis oferecer empate ou nao
                                                                             #resigned->
-
+            # jogada_braco = input("Qual movimento o braço vai fazer?")
+            # movimentoBraco = chess.Move.from_uci(jogada_braco)
+            
             print(movimentoBraco.move)
             
             pacman = board.is_capture(movimentoBraco.move)  #cria a variavel pacman que será um booleano. A partir do objeto "board" usamos o metodo "is_capture"
                                                             #passando para esse metodo a variavel do tipo chess.move "movimentoBraco.move"
-            print(pacman)
+                                                            
+            if (pacman == True):
+                print("Vou comer nhamnham")
+            
+            nao_volta = False
+            
+            passant = board.is_en_passant(movimentoBraco.move)
+            if passant == True:
+                pacman = False
+                nao_volta = True
             
             roque = board.is_castling(movimentoBraco.move)
+            if roque == True:
+                nao_volta = True
             roque_curto = board.is_kingside_castling(movimentoBraco.move)
             roque_longo = board.is_queenside_castling(movimentoBraco.move)
             
@@ -111,8 +124,9 @@ while True:
             break
             
         funcB.seComeu(pacman,theta2,phi2,z2)
-        funcB.movimentaPeca(theta1,phi1,z1,theta2,phi2,z2,roque)
+        funcB.movimentaPeca(theta1,phi1,z1,theta2,phi2,z2,nao_volta)
         funcB.fazroque(roque_curto,roque_longo,tabuleiro)
+        funcB.passante(c2,l2,z2,tabuleiro,passant)
     
     except Exception as e:
         print("Erro no loop principal:", e.args)
