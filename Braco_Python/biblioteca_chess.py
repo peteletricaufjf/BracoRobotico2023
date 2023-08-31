@@ -76,3 +76,28 @@ while True:
         # input("Pressione Enter para prosseguir")
         print(board)
 """
+
+# IDENTIFICA O PASSANT
+"""
+while True:
+        movb = engine.play(board, chess.engine.Limit(time=0.001))
+        print(movb.move)
+        
+        if board.is_en_passant(movb.move)  == True:
+                input("vai rolar o passant")
+                
+        board.push(movb.move)
+        
+        
+        print(board)
+        
+        
+        movp = engine.play(board, chess.engine.Limit(time=0.001))
+        print(movp.move)
+        
+        if board.is_en_passant(movp.move)  == True:
+                input("vai rolar o passant")
+                
+        board.push(movp.move)
+        print(board)
+"""

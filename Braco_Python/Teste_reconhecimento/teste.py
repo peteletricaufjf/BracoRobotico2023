@@ -15,8 +15,8 @@ def thresold_calibreation(img):
         if cv2.waitKey(1) & 0xFF == ord('q'):
             return t
 
-image1 = cv2.imread('Method_working\Images/2.jpg')
-image2 = cv2.imread('Method_working\Images/3.jpg')
+image1 = cv2.imread('Teste_reconhecimento/Images/1.jpg')
+image2 = cv2.imread('Teste_reconhecimento/Images/2.jpg')
 
 image1_gray = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
 image2_gray = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
@@ -28,11 +28,11 @@ cv2.waitKey(0)
 
 diff = cv2.resize(diff,(800,800))
 cv2.imshow("diff",diff)
-cv2.imwrite("/Images/Difference_image.jpg",diff)
+cv2.imwrite("Images/Difference_image.jpg",diff)
 
 diff_gray = cv2.cvtColor(diff,cv2.COLOR_BGR2GRAY)
 cv2.imshow("diff_gray", diff_gray)
-cv2.imwrite("/Images/Difference_GrayScale_image.jpg",diff_gray)
+cv2.imwrite("Images/Difference_GrayScale_image.jpg",diff_gray)
 cv2.waitKey(0)
 
 value = thresold_calibreation(diff_gray)
@@ -50,13 +50,13 @@ for c in cnts:
         cv2.rectangle(diff, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
 cv2.imshow("diff", diff)
-cv2.imwrite("/Images/show_Contours.jpg",diff)
+cv2.imwrite("Images/show_Contours.jpg",diff)
 cv2.waitKey(0)
 
 
 result1 =  cv2.bitwise_and(image1,image1,mask = thresold)
 cv2.imshow("result",result1)
-cv2.imwrite("/Images/Result_image.jpg",result1)
+cv2.imwrite("Images/Result_image.jpg",result1)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()

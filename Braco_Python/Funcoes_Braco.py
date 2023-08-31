@@ -32,7 +32,7 @@ def seComeu(pacman,theta2,phi2,z2):
         phi2 (int): Indica o segundo ângulo da casa que o braço precisa de ir para remover a peça
         z2 (int): Indica a altura necessária para pegar uma peça nessa casa
     """
-    if pacman is True:
+    if (pacman is True):
         # Manda o braço ir até a peça que será removida do jogo
         coord = f"{theta2}, {phi2}, {bernardo}, 500, 500, 0"  # (angulo 1, angulo 2, z, vel, acel, eletroimã)
         serBraco.write(coord.encode())
@@ -54,7 +54,7 @@ def seComeu(pacman,theta2,phi2,z2):
         confere(serBraco)
 
 
-def movimentaPeca(theta1,phi1,z1,theta2,phi2,z2,roque):
+def movimentaPeca(theta1,phi1,z1,theta2,phi2,z2,nao_volta):
     """Função que realiza o movimento de levar uma peça de uma casa para outra
 
     Args:
@@ -98,8 +98,8 @@ def movimentaPeca(theta1,phi1,z1,theta2,phi2,z2,roque):
     serBraco.write(coord.encode())
     confere(serBraco)
 
-    # Se for ocorrer o roque ele não precisa voltar para a posição inical, pois ainda vai movimentar a torre
-    if roque == False:
+    # Se for ocorrer o roque ou passant ele não precisa voltar para a posição inical, pois ainda vai movimentar a torre
+    if nao_volta == False:
         # Manda o braço para uma posição inicial
         coord = f"30, 180, {bernardo}, 500, 500, 0"
         serBraco.write(coord.encode())
@@ -154,3 +154,19 @@ def fazroque(roque_curto,roque_longo,tabuleiro):
         roque = False
             
         movimentaPeca(theta1,phi1,z1,theta2,phi2,z2,roque)
+        
+        
+def passante(c2,l2,z2,tabuleiro,passant):
+    if passant == True:
+        l2 = l2 + 1
+        theta2 = tabuleiro.loc[l2, c2][0]
+        phi2 = tabuleiro.loc[l2, c2][1]
+        pacman = True
+        seComeu(pacman,theta2,phi2,z2)
+        
+        # Manda o braço para uma posição inicial
+        coord = f"30, 180, {bernardo}, 500, 500, 0"
+        serBraco.write(coord.encode())
+        confere(serBraco)
+        
+        
